@@ -1,30 +1,46 @@
 function gameBoard() {
-  const gridSize = {
-    grid: [
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-    ],
-  };
+	let grid = [
+		["", "", ""],
+		["", "", ""],
+		["", "", ""],
+	];
 
-  const getCellStatus = (y, x) => {
-    let status = gridSize.grid[y][x];
+	const getBoard = () => grid;
 
-    switch (status) {
-      case 1:
-        return "circle";
-      case 2:
-        return "cross";
-      default:
-        return "empty";
-    }
-  };
+	// const getCellStatus = (y, x) => {
+	//   return grid[y][x];
+	// };
+
+	const changeCell = (y, x, team) => {
+		if (grid[y][x] === "") {
+			grid[y][x] = team;
+		} else if (grid[y][x] !== team) {
+			console.log("You cannot place a tictac here!");
+		}
+	};
+
+	return { changeCell, getBoard };
 }
 
-function player(name) {
-  return {
-    name: name,
-  };
+function playerData() {
+	const player1 = {
+		name: "Player 1",
+		team: "X",
+	};
+	const player2 = {
+		name: "Player 2",
+		team: "O",
+	};
+	return { player1, player2 };
 }
 
-let player1 = player("Jake");
+function gameController() {
+	const board = gameBoard();
+
+	const checkWin = () => {
+		for (let i = 0; i < gameBoard().getBoard().length; i++) {}
+	};
+	return { checkWin };
+}
+
+gameController().checkWin();
