@@ -38,7 +38,20 @@ function gameController() {
 	const board = gameBoard();
 
 	const checkWin = () => {
-		for (let i = 0; i < gameBoard().getBoard().length; i++) {}
+		const isComplete = (currentValue) =>
+			currentValue === "X" || currentValue === "O";
+		const horizontalCheck = board.getBoard()[0].every(isComplete);
+
+		function winChecks(r) {
+			for (let c = 0; c < board.getBoard().length; c++ /*C++!?*/) {
+				if (board.getBoard()[c][r] === "X" || board.getBoard()[c][r] === "O") {
+				} else {
+				}
+			}
+		}
+		for (let r = 0; r < board.getBoard().length; r++) {
+			winChecks(r);
+		}
 	};
 	return { checkWin };
 }
