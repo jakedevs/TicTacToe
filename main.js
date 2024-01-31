@@ -1,10 +1,10 @@
-let grid = [
+const grid = [
 	[0, 0, 0],
 	[0, 0, 0],
 	[0, 0, 0],
 ];
 
-let player = {
+const player = {
 	//One will be represented as X, and two as O
 	one: 1,
 	two: 2,
@@ -12,48 +12,64 @@ let player = {
 
 let activePlayer = player.one;
 
-    function alternatePlayers() {
+function alternatePlayers() {
 	activePlayer === player.one
 		? (activePlayer = player.two)
 		: (activePlayer = player.one);
 	return activePlayer;
 }
 
-    function isValidCell(X, Y) {
-  if (grid[Y][X] !== 0) {
-    return false;
-  }
-   else if (grid[Y][X] === undefined) {
-    return false 
-   }
-  else {
-    return true;
-  }
+function isValidCell(X, Y) {
+	if (grid[Y][X] !== 0) {
+		return false;
+	}
+	if (grid[Y][X] === undefined) {
+		return false;
+	}
+	return true;
 }
 
 function setCellValue(X, Y) {
-  if (isValidCell(X, Y) === true) {
-	  grid[Y][X] = activePlayer;
-    console.table(grid);
-	  alternatePlayers();
-    return grid;
-  }
-  else {
-    //Will loop until checkWinConditions() is true
-  }
+	if (isValidCell(X, Y) === true) {
+		grid[Y][X] = activePlayer;
+		console.table(grid);
+		alternatePlayers();
+		return grid;
+	}
 }
 
 function checkWinConditions(activePlayer) {
-	const rowFilled = (currentValue) => currentValue === activePlayer;
-	return grid[0].every(rowFilled);
+	// Horizontal win check
+	// const rowFilled = (currentValue) => currentValue === activePlayer;
+	// Don't forget to make this an iterator
+	// grid[0].every(rowFilled);
+
+	// Vertical check requirements
+	// grid[0][0] grid[1][0] grid[2][0]
+	// grid[0][1] grid[1][1] grid [2][1]
+
+	for (let i = 0; i < grid.length; i++) {
+		const columnFilled = () => {
+			return grid[i][0] === activePlayer;
+		};
+		let counter = 0;
+		if (columnFilled() === true) {
+			counter++;
+			console.log(`counter = ${counter}`);
+			if (counter === 3) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 function playRound() {
-  while (checkWinConditions(activePlayer) === false) {
-	let X = prompt("X location");
-	let Y = prompt("Y location");
-	setCellValue(X, Y);
-  }
+	do {
+		const X = prompt("X location");
+		const Y = prompt("Y location");
+		setCellValue(X, Y);
+	} while (checkWinConditions(activePlayer) === false);
 }
 
 console.log(playRound());
