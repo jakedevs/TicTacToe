@@ -23,18 +23,16 @@ function isValidCell(X, Y) {
 	if (grid[Y][X] !== 0) {
 		return false;
 	}
-	if (grid[Y][X] === undefined) {
-		return false;
-	}
 	return true;
 }
 
 function setCellValue(X, Y) {
 	if (isValidCell(X, Y) === true) {
 		grid[Y][X] = activePlayer;
-		console.table(grid);
+		const updatedGrid = grid;
+		console.table(updatedGrid);
 		alternatePlayers();
-		return grid;
+		return updatedGrid;
 	}
 }
 
@@ -48,11 +46,11 @@ function checkWinConditions(activePlayer) {
 	// grid[0][0] grid[1][0] grid[2][0]
 	// grid[0][1] grid[1][1] grid [2][1]
 
+	let counter = 0;
 	for (let i = 0; i < grid.length; i++) {
 		const columnFilled = () => {
 			return grid[i][0] === activePlayer;
 		};
-		let counter = 0;
 		if (columnFilled() === true) {
 			counter++;
 			console.log(`counter = ${counter}`);
