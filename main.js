@@ -27,47 +27,49 @@ function isValidCell(X, Y) {
 }
 
 function setCellValue(X, Y) {
-	if (isValidCell(X, Y) === true) {
-		grid[Y][X] = activePlayer;
-		const updatedGrid = grid;
-		console.table(updatedGrid);
-		alternatePlayers();
-		return updatedGrid;
-	}
+	grid[Y][X] = activePlayer;
+	const updatedGrid = grid;
+	console.table(updatedGrid);
+	return updatedGrid;
 }
 
-function checkWinConditions(activePlayer) {
-	// Horizontal win check
-	// const rowFilled = (currentValue) => currentValue === activePlayer;
-	// Don't forget to make this an iterator
-	// grid[0].every(rowFilled);
+function checkWinConditions(activePlayer, currentGrid) {
+	const filled = (currentValue) => currentValue === activePlayer;
 
-	// Vertical check requirements
-	// grid[0][0] grid[1][0] grid[2][0]
-	// grid[0][1] grid[1][1] grid [2][1]
+	const columnCheck = [
+		[currentGrid[0][0], currentGrid[1][0], currentGrid[2][0]],
+		[currentGrid[0][1], currentGrid[1][1], currentGrid[2][1]],
+		[currentGrid[0][2], currentGrid[1][2], currentGrid[2][2]],
+	];
 
-	let counter = 0;
 	for (let i = 0; i < grid.length; i++) {
-		const columnFilled = () => {
-			return grid[i][0] === activePlayer;
-		};
-		if (columnFilled() === true) {
-			counter++;
-			console.log(`counter = ${counter}`);
-			if (counter === 3) {
-				return true;
-			}
+		if (columnCheck[i].every(filled) === true || grid[i].every(filled)) {
+			return true;
 		}
 	}
+
 	return false;
 }
 
-function playRound() {
-	do {
-		const X = prompt("X location");
-		const Y = prompt("Y location");
-		setCellValue(X, Y);
-	} while (checkWinConditions(activePlayer) === false);
+function getInput() {
+	const X = prompt("X location");
+	const Y = prompt("Y location");
+	return { X, Y };
 }
 
-console.log(playRound());
+function playRound() {
+	//TODO: fix placing in unavailable cell, diagonal check
+	const inputValues = getInput();
+	const checkCellValidity = isValidCell(inputValues.X, inputValues.Y);
+	const updateGrid = setCellValue(inputValues.X, inputValues.Y);
+	console.log(`active player before checkGameOver: ${activePlayer}`);
+	const checkGameOver = checkWinConditions(activePlayer, updateGrid);
+	alternatePlayers();
+	return checkGameOver;
+}
+
+function startGame() {
+	while (playRound() === false) {}
+}
+
+startGame();
