@@ -33,7 +33,8 @@ function setCellValue(X, Y) {
 }
 
 function checkWinConditions(currentGrid) {
-	const filled = (currentValue) => currentValue === (player.one || player.two);
+	const filledOne = (currentValue) => currentValue === player.one;
+	const filledTwo = (currentValue) => currentValue === player.two;
 
 	const transpose = [
 		[currentGrid[0][0], currentGrid[1][0], currentGrid[2][0]],
@@ -47,13 +48,21 @@ function checkWinConditions(currentGrid) {
 	];
 
 	for (let i = 0; i < grid.length; i++) {
-		const rowCheck = grid[i].every(filled);
-		const columnCheck = transpose[i].every(filled);
-		const diagCheck = diagonals[0].every(filled) || diagonals[1].every(filled);
+		const rowCheck = grid[i].every(filledOne) || grid[i].every(filledTwo);
+		const columnCheck =
+			transpose[i].every(filledOne) || transpose[i].every(filledTwo);
+		const diagCheck =
+			diagonals[0].every(filledOne) ||
+			diagonals[1].every(filledOne) ||
+			diagonals[0].every(filledTwo) ||
+			diagonals[1].every(filledTwo);
+
 		if (rowCheck === true || columnCheck === true || diagCheck === true) {
 			return true;
 		}
-		const tieCheck = grid.every(filled);
+
+		const tieCheck = grid.every(filledOne) || grid.every(filledTwo);
+
 		if (tieCheck === true) {
 			return null;
 		}
@@ -67,7 +76,7 @@ function getInput() {
 	const Y = prompt("Y location");
 	return { X, Y };
 }
-function playRound(activeGrid) {
+function playRound() {
 	const saveInput = getInput();
 
 	if (isValidCell(saveInput.X, saveInput.Y)) {
@@ -88,3 +97,4 @@ function playRound(activeGrid) {
 }
 
 playRound();
+console.log(checkWinConditions(grid));
