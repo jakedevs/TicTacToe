@@ -45,12 +45,17 @@ function checkWinConditions(currentGrid) {
 		[currentGrid[0][0], currentGrid[1][1], currentGrid[2][2]],
 		[currentGrid[0][2], currentGrid[1][1], currentGrid[2][0]],
 	];
+
 	for (let i = 0; i < grid.length; i++) {
 		const rowCheck = grid[i].every(filled);
 		const columnCheck = transpose[i].every(filled);
 		const diagCheck = diagonals[0].every(filled) || diagonals[1].every(filled);
 		if (rowCheck === true || columnCheck === true || diagCheck === true) {
 			return true;
+		}
+		const tieCheck = grid.every(filled);
+		if (tieCheck === true) {
+			return null;
 		}
 	}
 
@@ -72,8 +77,13 @@ function playRound(activeGrid) {
 		if (checkWin === true) {
 			return "gg";
 		}
+		if (checkWin === null) {
+			return "tie";
+		}
 		alternatePlayers();
 		playRound(getGrid);
+	} else {
+		playRound();
 	}
 }
 
