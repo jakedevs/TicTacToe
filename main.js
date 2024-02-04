@@ -5,7 +5,6 @@ const grid = [
 ];
 
 const player = {
-	//One will be represented as X, and two as O
 	one: 1,
 	two: 2,
 };
@@ -33,17 +32,24 @@ function setCellValue(X, Y) {
 	return updatedGrid;
 }
 
-function checkWinConditions(activePlayer, currentGrid) {
-	const filled = (currentValue) => currentValue === activePlayer;
+function checkWinConditions(currentGrid) {
+	const filled = (currentValue) => currentValue === (player.one || player.two);
 
-	const columnCheck = [
+	const transpose = [
 		[currentGrid[0][0], currentGrid[1][0], currentGrid[2][0]],
 		[currentGrid[0][1], currentGrid[1][1], currentGrid[2][1]],
 		[currentGrid[0][2], currentGrid[1][2], currentGrid[2][2]],
 	];
 
+	const diagonals = [
+		[currentGrid[0][0], currentGrid[1][1], currentGrid[2][2]],
+		[currentGrid[0][2], currentGrid[1][1], currentGrid[2][0]],
+	];
 	for (let i = 0; i < grid.length; i++) {
-		if (columnCheck[i].every(filled) === true || grid[i].every(filled)) {
+		const rowCheck = grid[i].every(filled);
+		const columnCheck = transpose[i].every(filled);
+		const diagCheck = diagonals[0].every(filled) || diagonals[1].every(filled);
+		if (rowCheck === true || columnCheck === true || diagCheck === true) {
 			return true;
 		}
 	}
@@ -56,20 +62,19 @@ function getInput() {
 	const Y = prompt("Y location");
 	return { X, Y };
 }
+function playRound(activeGrid) {
+	const saveInput = getInput();
 
-function playRound() {
-	//TODO: fix placing in unavailable cell, diagonal check
-	const inputValues = getInput();
-	const checkCellValidity = isValidCell(inputValues.X, inputValues.Y);
-	const updateGrid = setCellValue(inputValues.X, inputValues.Y);
-	console.log(`active player before checkGameOver: ${activePlayer}`);
-	const checkGameOver = checkWinConditions(activePlayer, updateGrid);
-	alternatePlayers();
-	return checkGameOver;
+	if (isValidCell(saveInput.X, saveInput.Y)) {
+		const getGrid = setCellValue(saveInput.X, saveInput.Y);
+		const checkWin = checkWinConditions(getGrid);
+
+		if (checkWin === true) {
+			return "gg";
+		}
+		alternatePlayers();
+		playRound(getGrid);
+	}
 }
 
-function startGame() {
-	while (playRound() === false) {}
-}
-
-startGame();
+playRound();
